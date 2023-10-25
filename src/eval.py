@@ -27,21 +27,15 @@ def eval(epoch: int,
     
     # Disable gradient computations. Since we're in evaluation mode, we don't need gradients.
     with torch.no_grad():
-        for _, (inputs, targets) in enumerate(loader):  # Loop through batches of data
-            # Move data and target tensors to the specified device
-            inputs, targets = inputs.to(device), targets.to(device)
-
-            # Compute model predictions
-            outputs = model(inputs)
+        for _, (inputs, targets) in enumerate(loader):
             
-            # Compute loss for the batch
+            inputs, targets = inputs.to(device), targets.to(device)
+            outputs = model(inputs)
             loss = criterion(outputs, targets)
 
-            # Accumulate loss and update counts
             eval_loss += loss.item()
-            _, predicted = outputs.max(1)  # Get the index of the max log-probability as prediction
+            _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
 
-    # Print evaluation results for the epoch
     print(f'Epoch: {epoch} | Eval_Loss: {eval_loss/len(loader)} | Eval_Accuracy: {100.*correct/total}')

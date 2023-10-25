@@ -35,21 +35,17 @@ def test(model: nn.Module,
         for _, (inputs, targets) in enumerate(loader):
             inputs, targets = inputs.to(device), targets.to(device)
 
-            # Compute model predictions
             outputs = model(inputs)
-            
-            # Compute the loss for the batch
             loss = criterion(outputs, targets)
 
-            # Accumulate loss and update counts
             test_loss += loss.item()
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
 
-    # Print testing results
     print(f'Test_Loss: {test_loss/len(loader)} | Test_Accuracy: {100.*correct/total}')
 
+# Only test
 if __name__ == '__main__':
     image_size = 64
 

@@ -61,7 +61,7 @@ def main(model='VGG16', image_size=64):
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-    # Training loop for 10 epochs
+    # Training loop
     for epoch in range(1, 11):
         train(epoch, model, optimizer, criterion, train_loader, device)
         eval(epoch, model, criterion, val_loader, device)
