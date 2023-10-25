@@ -70,7 +70,7 @@ if __name__ == '__main__':
 
     # Prepare test data loader
     test_dataset = datasets.ImageFolder(root='../data_clean', transform=test_transform)
-    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2)
+    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Initialize and load model weights
     model = VGG('VGG16', classes=3, image_size=image_size).to(device)

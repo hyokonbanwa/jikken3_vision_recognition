@@ -52,9 +52,9 @@ def main(model='VGG16', image_size=64):
     train_dataset.transform = train_transform
 
     # Preparing data loaders for training, validation, and test sets
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=2)
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=2)
-    test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=2)
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=2, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=2, pin_memory=True)
+    test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=2, pin_memory=True)
 
     # Creating the model, loss function, and optimizer
     model = VGG('VGG16', classes=3, image_size=image_size).to(device)
