@@ -20,33 +20,28 @@ This repository provides tools for training and evaluating VGG models. It includ
 1. Install Python 3.x and necessary libraries.
 2. Clone this repository.
 
-\```bash
+```bash
 git clone [repository URL]
 cd [repository name]
-\```
+```
 
 3. Install required packages.
 
-\```bash
-pip install torch torchvision tqdm
-\```
+```bash
+pip install requirement.txt
+```
 
 ## Usage
 
-1. Place your data in the appropriate directory. For this example, the `data_clean` directory is referenced.
+1. Place your data in the appropriate directory.
 2. Train the model.
 
-\```bash
+```bash
 python main.py
-\```
+```
 
 3. Test the model.
 
-\```bash
+```bash
 python test.py
-\```
-
-## Installation
-```
-pip install -r requirements.txt
 ```
