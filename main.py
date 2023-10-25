@@ -14,11 +14,12 @@ from src.test import test
 
 def main(model='VGG16', image_size=64):
 
-    # fix seed
+    # Fixing the seed for reproducibility
     random_seed = 9999
     random.seed(random_seed)
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
+    # Checking if GPU is available and setting the seed for GPU operations
     if torch.cuda.is_available():
         device = torch.device('cuda')
         torch.cuda.manual_seed(random_seed)
@@ -26,7 +27,7 @@ def main(model='VGG16', image_size=64):
     else:
         device = torch.device('cpu')
 
-    # data preprocess and augmentation
+    # Preprocess and augmentation for training data
     train_transform = transforms.Compose([
         transforms.Resize((image_size, image_size)),
         transforms.RandomHorizontalFlip(), 
@@ -35,13 +36,14 @@ def main(model='VGG16', image_size=64):
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ])
 
+    # Preprocess for test data (no augmentation)
     test_transform = transforms.Compose([
         transforms.Resize((image_size, image_size)),
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ])
 
-    # prepare dataloader
+    # Loading and splitting the dataset into train, validation, and test sets
     dataset = datasets.ImageFolder(root='./data_clean', transform=test_transform)
     train_len = int(len(dataset)*0.8)
     val_len = int(len(dataset)*0.1)
@@ -49,25 +51,25 @@ def main(model='VGG16', image_size=64):
     train_dataset, val_dataset, test_dataset = random_split(dataset, [train_len, val_len, test_len])
     train_dataset.transform = train_transform
 
+    # Preparing data loaders for training, validation, and test sets
     train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=2)
     val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=2)
     test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=2)
 
-    # create model
+    # Creating the model, loss function, and optimizer
     model = VGG('VGG16', classes=3, image_size=image_size).to(device)
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-    # train loop
+    # Training loop for 10 epochs
     for epoch in range(1, 11):
-        
         train(epoch, model, optimizer, criterion, train_loader, device)
         eval(epoch, model, criterion, val_loader, device)
 
-    # test model
+    # Testing the model after training
     test(model, criterion, test_loader, device)
 
-    # save
+    # Saving the trained model weights
     torch.save(model.state_dict(), f'./final_weight.pth')
     print(f'Saved model to ./final_weight.pth')
 
