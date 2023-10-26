@@ -8,7 +8,9 @@ This repository provides tools for training and evaluating VGG models. It includ
 2. [Usage](#usage)
 3. [Installation](#installation)
 
-## Setup
+## Setup 
+
+Note. This is only for GPU
 
 1. Create Python 3.10 Environment
 ```bash
