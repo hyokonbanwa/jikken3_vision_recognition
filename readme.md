@@ -6,12 +6,10 @@ This repository provides tools for training and evaluating VGG models. It includ
 
 1. [Setup](#setup)
 2. [Usage](#usage)
-3. [Installation](#installation)
 
 ## Setup 
 
 Note. This is only for GPU
-
 1. Create Python 3.10 Environment
 ```bash
 conda create -n [environment name] python=3.10 -y
