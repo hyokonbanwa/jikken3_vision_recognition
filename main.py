@@ -57,7 +57,7 @@ def main(model='VGG16', image_size=64, pretrained=True):
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Creating the model, loss function, and optimizer
-    model = VGG('VGG16', classes=3, image_size=image_size, pretrained=pretrained).to(device)
+    model = VGG(model, classes=3, image_size=image_size, pretrained=pretrained).to(device)
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 

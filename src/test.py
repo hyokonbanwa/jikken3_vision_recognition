@@ -1,5 +1,5 @@
 import torch
-from torch import nn, optim
+from torch import nn
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
@@ -7,7 +7,7 @@ import numpy as np
 import random
 import sys
 sys.path.append('../')  # Add parent directory to sys.path to access the 'src' directory
-from src.vgg import VGG
+from src.vgg_local import VGG_LOCAL
 
 def test(model: nn.Module, 
          criterion: nn.Module, 
@@ -69,11 +69,11 @@ if __name__ == '__main__':
     ])
 
     # Prepare test data loader
-    test_dataset = datasets.ImageFolder(root='../test_data_other', transform=test_transform)
+    test_dataset = datasets.ImageFolder(root='../test_data_same', transform=test_transform)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Initialize and load model weights
-    model = VGG('VGG16', classes=3, image_size=image_size).to(device)
+    model = VGG_LOCAL('VGG16', classes=3, image_size=image_size).to(device)
     model.load_state_dict(torch.load('../final_weight.pth'))
 
     # Define the loss function
