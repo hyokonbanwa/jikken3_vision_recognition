@@ -12,7 +12,7 @@ from src.train import train
 from src.eval import eval
 from src.test import test
 
-def main(model='VGG16', image_size=64):
+def main(model='VGG13', image_size=64):
 
     # Fixing the seed for reproducibility
     random_seed = 9999
@@ -30,8 +30,8 @@ def main(model='VGG16', image_size=64):
     # Preprocess and augmentation for training data
     train_transform = transforms.Compose([
         transforms.Resize((image_size, image_size)),
-        transforms.RandomHorizontalFlip(), 
-        transforms.RandomVerticalFlip(), 
+        # transforms.RandomHorizontalFlip(), 
+        # transforms.RandomVerticalFlip(), 
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ])
@@ -44,17 +44,17 @@ def main(model='VGG16', image_size=64):
     ])
 
     # Loading and splitting the dataset into train, validation, and test sets
-    dataset = datasets.ImageFolder(root='./data_clean', transform=test_transform)
-    train_len = int(len(dataset)*0.8)
-    val_len = int(len(dataset)*0.1)
-    test_len = len(dataset) - train_len - val_len
-    train_dataset, val_dataset, test_dataset = random_split(dataset, [train_len, val_len, test_len])
+    dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
+    test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
+    train_len = int(len(dataset)*0.9)
+    val_len = len(dataset) - train_len
+    train_dataset, val_dataset = random_split(dataset, [train_len, val_len])
     train_dataset.transform = train_transform
 
     # Preparing data loaders for training, validation, and test sets
     train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=2, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=2, pin_memory=True)
-    test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=2, pin_memory=True)
+    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Creating the model, loss function, and optimizer
     model = VGG('VGG16', classes=3, image_size=image_size).to(device)
@@ -66,6 +66,7 @@ def main(model='VGG16', image_size=64):
         train(epoch, model, optimizer, criterion, train_loader, device)
         eval(epoch, model, criterion, val_loader, device)
 
+    print('###############Training Done###############')
     # Testing the model after training
     test(model, criterion, test_loader, device)
 

@@ -69,7 +69,7 @@ if __name__ == '__main__':
     ])
 
     # Prepare test data loader
-    test_dataset = datasets.ImageFolder(root='../data_clean', transform=test_transform)
+    test_dataset = datasets.ImageFolder(root='../test_data_other', transform=test_transform)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Initialize and load model weights
