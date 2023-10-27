@@ -3,7 +3,7 @@ import torch.nn as nn
 from torchvision.models import vgg11_bn, vgg13_bn, vgg16_bn, vgg19_bn
 
 class VGG(nn.Module):
-    def __init__(self, model: str, classes: int, image_size: int = 224) -> None:
+    def __init__(self, model: str, classes: int, image_size: int = 224, pretrained=False) -> None:
         """
         VGG model constructor.
 
@@ -16,13 +16,13 @@ class VGG(nn.Module):
         
         # Use appropriate VGG model based on the provided model type
         if model == 'VGG11':
-            self.features = vgg11_bn(pretrained=True).features
+            self.features = vgg11_bn(pretrained=pretrained).features
         elif model == 'VGG13':
-            self.features = vgg13_bn(pretrained=True).features
+            self.features = vgg13_bn(pretrained=pretrained).features
         elif model == 'VGG16':
-            self.features = vgg16_bn(pretrained=True).features
+            self.features = vgg16_bn(pretrained=pretrained).features
         elif model == 'VGG19':
-            self.features = vgg19_bn(pretrained=True).features
+            self.features = vgg19_bn(pretrained=pretrained).features
         else:
             raise ValueError('Unsupported VGG model')
         
