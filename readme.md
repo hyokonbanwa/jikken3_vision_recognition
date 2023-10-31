@@ -25,7 +25,7 @@ cd [repository name]
 3. Install required packages.
 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 ## Usage
