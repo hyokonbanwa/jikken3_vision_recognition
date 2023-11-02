@@ -6,6 +6,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 
 import numpy as np
+import matplotlib.pyplot as plt
 import random
 
 from src.vgg import VGG
@@ -13,8 +14,8 @@ from src.train import train
 from src.eval import eval
 from src.test import test
 
-def main(model: str = 'VGG11',      # Name of the model to use
-         classes: int = 10,          # Number of output dimensions (classes)
+def main(model: str = 'VGG16',      # Name of the model to use
+         classes: int = 3,          # Number of output dimensions (classes)
          image_size: int = 32,      # Size of the input image (width and height)
          pretrained: bool = False    # Whether to use a pre-trained model
         ) -> None:
@@ -58,11 +59,11 @@ def main(model: str = 'VGG11',      # Name of the model to use
 
     # Loading and splitting the dataset into train, validation, and test sets
     # HACK janken dataset
-    # dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
-    # test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
-    # HACK MNIST dataset
-    dataset = datasets.CIFAR10(root='./cifar', train=True, transform=test_transform, download=True)
-    test_dataset = datasets.CIFAR10(root='./cifar', train=False, transform=test_transform, download=True)
+    dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
+    test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
+    # HACK CIFAR10 dataset
+    # dataset = datasets.CIFAR10(root='./cifar', train=True, transform=test_transform, download=True)
+    # test_dataset = datasets.CIFAR10(root='./cifar', train=False, transform=test_transform, download=True)
     train_len = int(len(dataset)*0.9)
     val_len = len(dataset) - train_len
     train_dataset, val_dataset = random_split(dataset, [train_len, val_len])
@@ -78,12 +79,36 @@ def main(model: str = 'VGG11',      # Name of the model to use
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
+    # Initialize result lists
+    train_result = []; eval_result = []
+
     # Training loop
     for epoch in range(1, 11):
-        train(epoch, model, optimizer, criterion, train_loader, device)
-        eval(epoch, model, criterion, val_loader, device)
-
+        train_loss, train_acc = train(epoch, model, optimizer, criterion, train_loader, device)
+        eval_loss, eval_acc = eval(epoch, model, criterion, val_loader, device)
+        train_result.append((train_acc, train_loss))
+        eval_result.append((eval_acc, eval_loss))
     print('###############Training Done###############')
+
+    # Saving the results
+    train_acc, train_loss = zip(*train_result)
+    eval_acc, eval_loss = zip(*eval_result)
+    fig = plt.figure()
+    plt.plot(train_acc, label='train_acc')
+    plt.plot(eval_acc, label='eval_acc')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    fig.savefig('acc.png')
+
+    fig = plt.figure()
+    plt.plot(train_loss, label='train_loss')
+    plt.plot(eval_loss, label='eval_loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    fig.savefig('loss.png')
+
     # Testing the model after training
     test(model, criterion, test_loader, device)
 

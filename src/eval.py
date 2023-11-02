@@ -6,7 +6,7 @@ def eval(epoch: int,
          model: Module, 
          criterion: Module, 
          loader: DataLoader, 
-         device: torch.device) -> None:
+         device: torch.device) -> tuple[float, float]:
     """
     Evaluate the model's performance on a dataset.
 
@@ -39,3 +39,5 @@ def eval(epoch: int,
             correct += predicted.eq(targets).sum().item()
 
     print(f'Epoch: {epoch} | Eval_Loss: {eval_loss/len(loader)} | Eval_Accuracy: {100.*correct/total}')
+
+    return eval_loss/len(loader), correct/total

@@ -9,7 +9,7 @@ def train(epoch: int,
           optimizer: Optimizer, 
           criterion: Module, 
           loader: DataLoader, 
-          device: torch.device) -> None:
+          device: torch.device) -> tuple[float, float]:
     """
     Train the model for one epoch on a given dataset.
 
@@ -59,3 +59,5 @@ def train(epoch: int,
 
     # Print training results for the epoch
     print(f'Epoch: {epoch} | Train_Loss: {train_loss/len(loader)} | Train_Accuracy: {100.*correct/total}')
+
+    return train_loss/len(loader), correct/total
