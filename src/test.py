@@ -73,7 +73,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Initialize and load model weights
-    model = VGG_LOCAL('VGG16', classes=3, image_size=image_size).to(device)
+    model = VGG_LOCAL('VGG11', classes=3, image_size=image_size).to(device)
     model.load_state_dict(torch.load('../final_weight.pth'))
 
     # Define the loss function
