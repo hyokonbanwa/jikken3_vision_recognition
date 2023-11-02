@@ -14,9 +14,9 @@ from src.eval import eval
 from src.test import test
 
 def main(model: str = 'VGG11',      # Name of the model to use
-         classes: int = 3,          # Number of output dimensions (classes)
-         image_size: int = 64,      # Size of the input image (width and height)
-         pretrained: bool = True    # Whether to use a pre-trained model
+         classes: int = 10,          # Number of output dimensions (classes)
+         image_size: int = 32,      # Size of the input image (width and height)
+         pretrained: bool = False    # Whether to use a pre-trained model
         ) -> None:
     """
     Initializes and sets up the neural network model.
@@ -43,8 +43,8 @@ def main(model: str = 'VGG11',      # Name of the model to use
     # Preprocess and augmentation for training data
     train_transform = transforms.Compose([
         transforms.Resize((image_size, image_size)),
-        # transforms.RandomHorizontalFlip(), 
-        # transforms.RandomVerticalFlip(), 
+        transforms.RandomHorizontalFlip(), 
+        transforms.RandomVerticalFlip(), 
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ])
@@ -61,17 +61,17 @@ def main(model: str = 'VGG11',      # Name of the model to use
     # dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
     # test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
     # HACK MNIST dataset
-    dataset = datasets.MNIST(root='./mnist', train=True, transform=test_transform, download = True)
-    test_dataset = datasets.MNIST(root='./mnist', train=False, transform=test_transform, download = True)
+    dataset = datasets.CIFAR10(root='./cifar', train=True, transform=test_transform, download=True)
+    test_dataset = datasets.CIFAR10(root='./cifar', train=False, transform=test_transform, download=True)
     train_len = int(len(dataset)*0.9)
     val_len = len(dataset) - train_len
     train_dataset, val_dataset = random_split(dataset, [train_len, val_len])
     train_dataset.transform = train_transform
 
     # Preparing data loaders for training, validation, and test sets
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=2, pin_memory=True)
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=2, pin_memory=True)
-    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
+    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=2, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False, num_workers=2, pin_memory=True)
+    test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=2, pin_memory=True)
 
     # Creating the model, loss function, and optimizer
     model = VGG(model, classes=classes, image_size=image_size, pretrained=pretrained).to(device)
