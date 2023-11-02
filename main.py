@@ -59,11 +59,11 @@ def main(model: str = 'VGG16',      # Name of the model to use
 
     # Loading and splitting the dataset into train, validation, and test sets
     # HACK janken dataset
-    dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
-    test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
+    # dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
+    # test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
     # HACK CIFAR10 dataset
-    # dataset = datasets.CIFAR10(root='./cifar', train=True, transform=test_transform, download=True)
-    # test_dataset = datasets.CIFAR10(root='./cifar', train=False, transform=test_transform, download=True)
+    dataset = datasets.CIFAR10(root='./cifar', train=True, transform=test_transform, download=True)
+    test_dataset = datasets.CIFAR10(root='./cifar', train=False, transform=test_transform, download=True)
     train_len = int(len(dataset)*0.9)
     val_len = len(dataset) - train_len
     train_dataset, val_dataset = random_split(dataset, [train_len, val_len])
