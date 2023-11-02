@@ -15,7 +15,7 @@ from src.eval import eval
 from src.test import test
 
 def main(model: str = 'VGG16',      # Name of the model to use
-         classes: int = 3,          # Number of output dimensions (classes)
+         classes: int = 10,          # Number of output dimensions (classes)
          image_size: int = 32,      # Size of the input image (width and height)
          pretrained: bool = False    # Whether to use a pre-trained model
         ) -> None:
