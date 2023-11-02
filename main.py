@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 
@@ -12,7 +13,19 @@ from src.train import train
 from src.eval import eval
 from src.test import test
 
-def main(model='VGG16', image_size=64, pretrained=True):
+def main(model: str = 'VGG11',      # Name of the model to use
+         classes: int = 3,          # Number of output dimensions (classes)
+         image_size: int = 64,      # Size of the input image (width and height)
+         pretrained: bool = True    # Whether to use a pre-trained model
+        ) -> None:
+    """
+    Initializes and sets up the neural network model.
+    
+    :model(str): The name of the model to use.
+    :classes(int): The number of classes to classify.
+    :image_size(int): The size of the images to input into the network.
+    :pretrained(bool): Flag indicating whether to use a pre-trained model.
+    """
 
     # Fixing the seed for reproducibility
     random_seed = 9999
@@ -44,8 +57,12 @@ def main(model='VGG16', image_size=64, pretrained=True):
     ])
 
     # Loading and splitting the dataset into train, validation, and test sets
-    dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
-    test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
+    # HACK janken dataset
+    # dataset = datasets.ImageFolder(root='./train_data', transform=test_transform)
+    # test_dataset = datasets.ImageFolder(root='./test_data_same', transform=test_transform)
+    # HACK MNIST dataset
+    dataset = datasets.MNIST(root='./mnist', train=True, transform=test_transform, download = True)
+    test_dataset = datasets.MNIST(root='./mnist', train=False, transform=test_transform, download = True)
     train_len = int(len(dataset)*0.9)
     val_len = len(dataset) - train_len
     train_dataset, val_dataset = random_split(dataset, [train_len, val_len])
@@ -57,7 +74,7 @@ def main(model='VGG16', image_size=64, pretrained=True):
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Creating the model, loss function, and optimizer
-    model = VGG(model, classes=3, image_size=image_size, pretrained=pretrained).to(device)
+    model = VGG(model, classes=classes, image_size=image_size, pretrained=pretrained).to(device)
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
