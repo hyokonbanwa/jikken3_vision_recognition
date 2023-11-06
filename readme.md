@@ -48,4 +48,4 @@ python test.py
 
 **Note:** This is only for jetson.
 
-Access to [jetson_camera_demo](./jetson_camera_demo/)
+Access to [jetson_camera_demo](https://github.com/s-ito0621/VGG_Demo)
