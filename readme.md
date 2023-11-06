@@ -9,7 +9,7 @@ This repository provides tools for training and evaluating VGG models. It includ
 
 ## Setup 
 
-Note. This is only for GPU
+**Note:** This is only for GPU
 1. Create Python 3.10 Environment
 ```bash
 conda create -n [environment name] python=3.10 -y
@@ -43,3 +43,9 @@ python main.py
 cd src
 python test.py
 ```
+
+4. Do online demo
+
+**Note:** This is only for jetson.
+
+Access to [jetson_camera_demo](./jetson_camera_demo/)

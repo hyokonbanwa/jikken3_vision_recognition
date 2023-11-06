@@ -1,0 +1,9 @@
+[submodule "[パス]"]
+	path = [パス]
+	url = https://github.com/s-ito0621/VGG_Demo
+[submodule "[�jetson_camera_demo"]
+	path = [�jetson_camera_demo
+	url = https://github.com/s-ito0621/VGG_Demo
+[submodule "jetson_camera_demo"]
+	path = jetson_camera_demo
+	url = https://github.com/s-ito0621/VGG_Demo
