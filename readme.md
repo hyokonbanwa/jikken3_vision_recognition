@@ -18,7 +18,9 @@ conda activate [environment name]
 2. Clone this repository.
 
 ```bash
-git clone [repository URL]
+git clone https://github.com/ia-gu/jikken3_vision_recognition
+# If you want to clone VGG_Demo (for jetson) at the same time, you can use below instead of above.
+# git clone --recurse-submodules https://github.com/ia-gu/jikken3_vision_recognition
 cd [repository name]
 ```
 
