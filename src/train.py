@@ -9,7 +9,7 @@ def train(epoch: int,
           optimizer: Optimizer, 
           criterion: Module, 
           loader: DataLoader, 
-          device: torch.device) -> tuple[float, float]:
+          device: torch.device):
     """
     Train the model for one epoch on a given dataset.
 

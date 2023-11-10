@@ -6,7 +6,7 @@ def eval(epoch: int,
          model: Module, 
          criterion: Module, 
          loader: DataLoader, 
-         device: torch.device) -> tuple[float, float]:
+         device: torch.device):
     """
     Evaluate the model's performance on a dataset.
 
