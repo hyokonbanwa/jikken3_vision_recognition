@@ -47,7 +47,7 @@ def test(model: nn.Module,
 
 # Only test
 if __name__ == '__main__':
-    image_size = 64
+    image_size = 32
 
     # Set random seed for reproducibility
     random_seed = 9999
@@ -61,6 +61,7 @@ if __name__ == '__main__':
     else:
         device = torch.device('cpu')
 
+    print(f"used_device: {device}")
     # Preprocessing for test data
     test_transform = transforms.Compose([
         transforms.Resize((image_size, image_size)),
@@ -69,11 +70,12 @@ if __name__ == '__main__':
     ])
 
     # Prepare test data loader
-    test_dataset = datasets.ImageFolder(root='../test_data_same', transform=test_transform)
+    #test_dataset = datasets.ImageFolder(root='../test_data_same', transform=test_transform)
+    test_dataset = datasets.CIFAR10(root='../cifar', train=False, transform=test_transform, download=True)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Initialize and load model weights
-    model = VGG_LOCAL('VGG16', classes=3, image_size=image_size).to(device)
+    model = VGG_LOCAL('VGG16', classes=10, image_size=image_size).to(device)
     model.load_state_dict(torch.load('../final_weight.pth'))
 
     # Define the loss function
