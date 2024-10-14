@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+import torch_tensorrt
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
@@ -32,8 +33,8 @@ def test(model: nn.Module,
     total = 0      # Total samples processed
 
     # Disable gradient computations, as we are in evaluation mode and don't need gradients
+    print("start_test")
     with torch.no_grad():
-        print("start_test")
         start = time.perf_counter()
         for _, (inputs, targets) in enumerate(loader):
             inputs, targets = inputs.to(device), targets.to(device)
@@ -46,7 +47,7 @@ def test(model: nn.Module,
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
         end = time.perf_counter()
-        
+
     print(f'Test_Loss: {test_loss/len(loader)} | Test_Accuracy: {100.*correct/total} | Elapsed Time: {end - start}')
 
 # Only test
@@ -79,11 +80,27 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
     # Initialize and load model weights
-    model = VGG_LOCAL('VGG16', classes=10, image_size=image_size).to(device)
+    model = VGG_LOCAL('VGG16', classes=10, image_size=image_size).float().eval().to(device)
     model.load_state_dict(torch.load('../final_weight.pth'))
+    
 
     # Define the loss function
     criterion = nn.CrossEntropyLoss().to(device)
 
+    #for tensorrt
+    inputs = [torch.randn((1, 3, image_size, image_size)).to("cuda")]
+    # Enabled precision for TensorRT optimization
+    enabled_precisions = {torch.float}
+    # Whether to print verbose logs
+    debug = False
+
+    # Build and compile the model with torch.compile, using Torch-TensorRT backend
+    traced_script_module = torch.jit.trace(model, inputs)
+    optimized_model = torch_tensorrt.compile(
+        traced_script_module,
+        inputs=inputs,
+        enabled_precisions=enabled_precisions,
+        debug=debug,
+    )
     # Test the model
-    test(model, criterion, test_loader, device)
+    test(optimized_model, criterion, test_loader, device)
