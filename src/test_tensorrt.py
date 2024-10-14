@@ -82,11 +82,15 @@ if __name__ == '__main__':
     # Initialize and load model weights
     model = VGG_LOCAL('VGG16', classes=10, image_size=image_size).float().eval().to(device)
     model.load_state_dict(torch.load('../final_weight.pth'))
-    
 
     # Define the loss function
     criterion = nn.CrossEntropyLoss().to(device)
 
+    ##--torch_tensorrt--##
+    #参考
+    #https://pytorch.org/TensorRT/tutorials/_rendered_examples/dynamo/torch_compile_resnet_example.html#sphx-glr-tutorials-rendered-examples-dynamo-torch-compile-resnet-example-py
+    #https://pytorch.org/TensorRT/tutorials/getting_started_with_python_api.html
+    #https://stackoverflow.com/questions/75371666/torch-tensorrt-compilation-error-unknown-type-bool-encountered-in-graph-lowerin
     #for tensorrt
     inputs = [torch.randn((1, 3, image_size, image_size)).to("cuda")]
     # Enabled precision for TensorRT optimization
@@ -102,5 +106,7 @@ if __name__ == '__main__':
         enabled_precisions=enabled_precisions,
         debug=debug,
     )
+    ##--torch_tensorrt--##
+    
     # Test the model
     test(optimized_model, criterion, test_loader, device)
